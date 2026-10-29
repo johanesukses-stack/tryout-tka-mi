@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRYOUT TKA MI HUSNAYAIN SLEMAN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans flex flex-col justify-between select-none">
+
+  <!-- Header -->
+  <header class="bg-green-700 text-white p-4 text-center font-bold text-lg shadow-md">
+    TRYOUT TKA MI HUSNAYAIN SLEMAN
+  </header>
+
+  <!-- Container Utama -->
+  <main class="container mx-auto p-4 max-w-2xl flex-grow">
+    
+    <!-- CARD LOGIN -->
+    <div id="login-card" class="bg-white p-6 rounded-lg shadow-md border">
+      <h2 class="text-xl font-bold mb-4 text-gray-800 text-center">Login Ujian Siswa</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">NISN</label>
+          <input type="text" id="nisn" class="w-full border p-2 rounded mt-1" placeholder="Masukkan NISN">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Password</label>
+          <input type="password" id="password" class="w-full border p-2 rounded mt-1" placeholder="Masukkan Password">
+        </div>
+        <button onclick="login()" class="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700">
+          Masuk Ujian
+        </button>
+      </div>
+    </div>
+
+    <!-- CARD CBT UJIAN -->
+    <div id="exam-card" class="hidden bg-white p-6 rounded-lg shadow-md border">
+      <!-- Info Header Ujian -->
+      <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <div>
+          <p id="student-info" class="font-bold text-gray-800"></p>
+          <p class="text-xs text-gray-500">Mapel: IPAS Paket 3</p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-gray-500">Sisa Waktu:</span>
+          <div id="timer" class="text-lg font-bold text-red-600">90:00</div>
+        </div>
+      </div>
+
+      <!-- Area Soal -->
+      <div id="question-container" class="mb-6">
+        <p id="question-number" class="font-semibold text-gray-700 mb-2"></p>
+        <p id="question-text" class="text-gray-900 mb-4"></p>
+        <div id="options-container" class="space-y-2"></div>
+      </div>
+
+      <!-- Navigasi Soal -->
+      <div class="flex justify-between items-center border-t pt-4">
+        <button id="prev-btn" onclick="prevQuestion()" class="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50">Kembali</button>
+        <button id="next-btn" onclick="nextQuestion()" class="bg-blue-600 text-white px-4 py-2 rounded">Lanjut</button>
+        <button id="submit-btn" onclick="confirmSubmit()" class="hidden bg-red-600 text-white px-4 py-2 rounded font-bold">Kirim Jawaban</button>
+      </div>
+
+      <!-- Petunjuk Keluar CBT -->
+      <div class="mt-6 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-xs text-yellow-700">
+        <strong>Petunjuk Layar Ujian:</strong> Jangan berpindah tab atau keluar aplikasi saat ujian berlangsung. Tekan <button onclick="toggleFullscreen()" class="underline font-bold">Layar Penuh</button> untuk kenyamanan.
+      </div>
+    </div>
+
+    <!-- CARD HASIL & KONFIRMASI WA -->
+    <div id="result-card" class="hidden bg-white p-6 rounded-lg shadow-md border text-center">
+      <h2 class="text-2xl font-bold text-green-600 mb-2">Ujian Selesai!</h2>
+      <p class="text-gray-600 mb-4">Jawaban Anda telah berhasil tersimpan ke sistem rekap guru.</p>
+      <a id="wa-link" target="_blank" class="inline-block bg-green-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:bg-green-600">
+        Konfirmasi ke WA Guru (082143534304)
+      </a>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
