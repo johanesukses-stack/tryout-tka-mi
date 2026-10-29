@@ -14,10 +14,10 @@
   </header>
 
   <!-- Container Utama -->
-  <main class="container mx-auto p-4 max-w-2xl flex-grow">
+  <main class="container mx-auto p-4 max-w-2xl flex-grow flex items-center justify-center">
     
-    <!-- CARD LOGIN -->
-    <div id="login-card" class="bg-white p-6 rounded-lg shadow-md border">
+    <!-- CARD LOGIN SISWA -->
+    <div id="login-card" class="bg-white p-6 rounded-lg shadow-md border w-full">
       <h2 class="text-xl font-bold mb-4 text-gray-800 text-center">Login Ujian Siswa</h2>
       <div class="space-y-4">
         <div>
@@ -28,15 +28,52 @@
           <label class="block text-sm font-medium text-gray-700">Password</label>
           <input type="password" id="password" class="w-full border p-2 rounded mt-1" placeholder="Masukkan Password">
         </div>
-        <button onclick="login()" class="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700">
+        <button onclick="loginSiswa()" class="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700">
           Masuk Ujian
+        </button>
+        <div class="text-center mt-3">
+          <button onclick="toggleTeacherLogin()" class="text-xs text-blue-600 underline">Masuk sebagai Guru (Reset Ujian)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD LOGIN GURU (PIN) -->
+    <div id="teacher-login-card" class="hidden bg-white p-6 rounded-lg shadow-md border w-full">
+      <h2 class="text-xl font-bold mb-4 text-gray-800 text-center">Login Panel Guru</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">PIN Guru</label>
+          <input type="password" id="teacher-pin" class="w-full border p-2 rounded mt-1" placeholder="Masukkan PIN Guru">
+        </div>
+        <button onclick="loginGuru()" class="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700">
+          Masuk Dashboard Guru
+        </button>
+        <div class="text-center mt-3">
+          <button onclick="toggleStudentLogin()" class="text-xs text-gray-600 underline">Kembali ke Login Siswa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD GURU (RESET SISWA) -->
+    <div id="teacher-dashboard" class="hidden bg-white p-6 rounded-lg shadow-md border w-full">
+      <h2 class="text-xl font-bold mb-4 text-gray-800 text-center">Dashboard Guru - Reset Ujian Siswa</h2>
+      <p class="text-xs text-gray-500 mb-4 text-center">Gunakan fitur ini untuk mereset status siswa yang ingin mengulang ujian atau testing.</p>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">NISN Siswa yang akan di-reset</label>
+          <input type="text" id="reset-nisn" class="w-full border p-2 rounded mt-1" placeholder="Masukkan NISN Siswa">
+        </div>
+        <button onclick="resetSiswa()" class="w-full bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700">
+          Reset Status Ujian Siswa
+        </button>
+        <button onclick="logoutGuru()" class="w-full bg-gray-500 text-white py-2 rounded font-semibold hover:bg-gray-600">
+          Keluar / Tutup Panel Guru
         </button>
       </div>
     </div>
 
     <!-- CARD CBT UJIAN -->
-    <div id="exam-card" class="hidden bg-white p-6 rounded-lg shadow-md border">
-      <!-- Info Header Ujian -->
+    <div id="exam-card" class="hidden bg-white p-6 rounded-lg shadow-md border w-full">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
         <div>
           <p id="student-info" class="font-bold text-gray-800"></p>
@@ -48,28 +85,21 @@
         </div>
       </div>
 
-      <!-- Area Soal -->
       <div id="question-container" class="mb-6">
         <p id="question-number" class="font-semibold text-gray-700 mb-2"></p>
         <p id="question-text" class="text-gray-900 mb-4"></p>
         <div id="options-container" class="space-y-2"></div>
       </div>
 
-      <!-- Navigasi Soal -->
       <div class="flex justify-between items-center border-t pt-4">
         <button id="prev-btn" onclick="prevQuestion()" class="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50">Kembali</button>
         <button id="next-btn" onclick="nextQuestion()" class="bg-blue-600 text-white px-4 py-2 rounded">Lanjut</button>
         <button id="submit-btn" onclick="confirmSubmit()" class="hidden bg-red-600 text-white px-4 py-2 rounded font-bold">Kirim Jawaban</button>
       </div>
-
-      <!-- Petunjuk Keluar CBT -->
-      <div class="mt-6 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-xs text-yellow-700">
-        <strong>Petunjuk Layar Ujian:</strong> Jangan berpindah tab atau keluar aplikasi saat ujian berlangsung. Tekan <button onclick="toggleFullscreen()" class="underline font-bold">Layar Penuh</button> untuk kenyamanan.
-      </div>
     </div>
 
     <!-- CARD HASIL & KONFIRMASI WA -->
-    <div id="result-card" class="hidden bg-white p-6 rounded-lg shadow-md border text-center">
+    <div id="result-card" class="hidden bg-white p-6 rounded-lg shadow-md border text-center w-full">
       <h2 class="text-2xl font-bold text-green-600 mb-2">Ujian Selesai!</h2>
       <p class="text-gray-600 mb-4">Jawaban Anda telah berhasil tersimpan ke sistem rekap guru.</p>
       <a id="wa-link" target="_blank" class="inline-block bg-green-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:bg-green-600">
