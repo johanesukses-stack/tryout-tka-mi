@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyIDReQLFwqF8WHQ9pNwoGljUKKrrm0yI6dlH3Eoi96yBKaj2ueUtqAggHIUzF5tsVR/exec"; // Ganti dengan URL Deploy Apps Script
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyIDReQLFwqF8WHQ9pNwoGljUKKrrm0yI6dlH3Eoi96yBKaj2ueUtqAggHIUzF5tsVR/exec"; 
 const WA_GURU = "6282143534304";
 const PIN_GURU = "321789";
 
@@ -6,20 +6,17 @@ let currentStudent = null;
 let currentQuestionIndex = 0;
 let userAnswers = {};
 let timerInterval;
-let timeLeft = 90 * 60; // 90 Menit dalam detik
+let timeLeft = 90 * 60; 
 
-// Struktur Soal yang Mudah Disesuaikan/Diperbarui untuk Ujian Berikutnya
 const examData = [
   {
     id: 1,
-    type: "pg", // Pilihan Ganda biasa
     question: "1. Perhatikan gambar telinga! Salah satu bagian telinga berfungsi memperkuat getaran suara dan meneruskannya ke telinga bagian dalam. Bagian yang dimaksud ditunjukkan nomor ...",
     options: ["A. (1)", "B. (2)", "C. (3)", "D. (4)"],
     key: "B"
   },
   {
     id: 2,
-    type: "pg",
     question: "2. Astri mengalami gangguan kesehatan mata miopi. Upaya Astri agar dapat membaca buku dengan jelas pada jarak normal adalah ...",
     options: [
       "A. memakai kacamata berlensa silindris ketika mengikuti pelajaran",
@@ -28,34 +25,58 @@ const examData = [
       "D. mengenakan kacamata berlensa negatif saat membaca"
     ],
     key: "D"
-  },
-  {
-    id: 5,
-    type: "bs", // Benar / Salah
-    question: "5. Tentukan Benar/Salah terkait metamorfosis hewan berikut: (1) Kecoak dan Belalang sembah metamorfosis tidak sempurna.",
-    options: ["Benar", "Salah"],
-    key: "Benar"
   }
-  // Tambahkan soal berikutnya dengan format JSON serupa
 ];
 
-// Anti-Kecurangan Ringan: Deteksi Pindah Tab
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden && currentStudent) {
-    alert("Peringatan: Anda terdeteksi meninggalkan layar ujian!");
-  }
-});
+// Navigasi Tampilan Login Guru / Siswa
+function toggleTeacherLogin() {
+  document.getElementById("login-card").classList.add("hidden");
+  document.getElementById("teacher-login-card").classList.remove("hidden");
+}
 
-async function login() {
+function toggleStudentLogin() {
+  document.getElementById("teacher-login-card").classList.add("hidden");
+  document.getElementById("login-card").classList.remove("hidden");
+}
+
+function loginGuru() {
+  const pinInput = document.getElementById("teacher-pin").value;
+  if (pinInput === PIN_GURU) {
+    document.getElementById("teacher-login-card").classList.add("hidden");
+    document.getElementById("teacher-dashboard").classList.remove("hidden");
+    document.getElementById("teacher-pin").value = "";
+  } else {
+    alert("PIN Guru salah!");
+  }
+}
+
+function logoutGuru() {
+  document.getElementById("teacher-dashboard").classList.add("hidden");
+  document.getElementById("login-card").classList.remove("hidden");
+}
+
+// Fitur Reset Ujian Siswa oleh Guru
+function resetSiswa() {
+  const nisnReset = document.getElementById("reset-nisn").value.trim();
+  if (!nisnReset) {
+    alert("Masukkan NISN siswa terlebih dahulu!");
+    return;
+  }
+  // Menghapus status ujian di localStorage browser
+  localStorage.removeItem(`exam_done_${nisnReset}`);
+  alert(`Status ujian untuk NISN ${nisnReset} berhasil di-reset! Siswa kini bisa login dan ujian kembali.`);
+  document.getElementById("reset-nisn").value = "";
+}
+
+async function loginSiswa() {
   const nisn = document.getElementById("nisn").value;
   const password = document.getElementById("password").value;
 
   if (localStorage.getItem(`exam_done_${nisn}`)) {
-    alert("Anda sudah pernah mengikuti ujian ini!");
+    alert("Anda sudah pernah mengikuti ujian ini! Hubungi guru jika ingin mengulang.");
     return;
   }
 
-  // Request verifikasi ke Apps Script
   try {
     const res = await fetch(GAS_URL, {
       method: "POST",
@@ -148,7 +169,6 @@ async function confirmSubmit() {
 }
 
 async function submitExam() {
-  // Hitung Skor & Analisis
   let totalCorrect = 0;
   let detailAnalisis = [];
 
@@ -161,7 +181,6 @@ async function submitExam() {
 
   let finalScore = Math.round((totalCorrect / examData.length) * 100);
 
-  // Kirim data ke GAS
   await fetch(GAS_URL, {
     method: "POST",
     body: JSON.stringify({
@@ -172,23 +191,11 @@ async function submitExam() {
     })
   });
 
-  // Tanda bahwa siswa sudah mengikuti ujian (1x Akses)
   localStorage.setItem(`exam_done_${currentStudent.nisn}`, "true");
 
-  // Tampilan Akhir & WA
   document.getElementById("exam-card").classList.add("hidden");
   document.getElementById("result-card").classList.remove("hidden");
 
   let textWA = `Assalamu'alaikum Pak Guru, saya *${currentStudent.nama}* (NISN: ${currentStudent.nisn}) telah selesai mengikuti TRYOUT TKA IPAS Paket 3. Skor saya: *${finalScore}*. Terima kasih!`;
   document.getElementById("wa-link").href = `https://wa.me/${WA_GURU}?text=${encodeURIComponent(textWA)}`;
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
-  }
 }
